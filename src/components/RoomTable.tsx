@@ -30,7 +30,7 @@ const RoomTable = ({ data }: RoomTableProps) => {
               <td className="py-3 px-6 text-left">
                 {item.roomName}
               </td>
-              <td className="py-3 px-6 text-left">
+              <td className={`py-3 px-6 text-left ${item.borrowed ? "font-bold" : ""}`}>
                 {item.borrowed ? "Đang được mượn" : "Chưa được mượn"}
               </td>
             </tr>

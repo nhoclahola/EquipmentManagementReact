@@ -10,6 +10,8 @@ interface Room {
 interface Equipment {
   equipmentId: string;
   equipmentName: string;
+  brandName: string;
+  description: string;
   imageUrl: string | null;
 }
 
@@ -28,14 +30,17 @@ interface RoomEquipmentTableProps {
 const EquipmentTable = ({ data }: RoomEquipmentTableProps) => {
   return (
     <div className="overflow-x-auto flex justify-center">
-      <table className="w-[80%] bg-white border border-gray-200 shadow-md">
+      <table className="w-[90%] bg-white border border-gray-200 shadow-md">
         <thead>
-          <tr className="bg-gray-200 text-gray-600 uppercase text-lg leading-normal"> {/* Đổi cỡ chữ ở đây */}
-            <th className="py-3 px-6 text-left">ID Thiết bị</th>
-            <th className="py-3 px-6 text-left">Tên Thiết bị</th>
-            <th className="py-3 px-6 text-left">Tên phòng</th>
-            <th className="py-3 px-6 text-left">Số lượng</th>
-            <th className="py-3 px-6 text-left">Hình ảnh</th>
+          <tr className="bg-gray-200 text-gray-600 uppercase text-lg leading-tight">
+            <th className="py-3 px-6 text-center whitespace-pre">ID thiết bị</th>
+            <th className="py-3 px-6 text-center whitespace-pre">Tên thiết bị</th>
+            <th className="py-3 px-6 text-center whitespace-pre">ID phòng</th>
+            <th className="py-3 px-6 text-center whitespace-pre">Tên phòng</th>
+            <th className="py-3 px-6 text-center whitespace-pre">Tên hãng</th>
+            <th className="py-3 px-6 text-center whitespace-pre">Mô tả</th>
+            <th className="py-3 px-6 text-center whitespace-pre">Số lượng</th>
+            <th className="py-3 px-6 text-center whitespace-pre">Hình ảnh</th>
           </tr>
         </thead>
         <tbody className="text-gray-700 text-lg font-light"> {/* Đổi cỡ chữ ở đây */}
@@ -48,7 +53,16 @@ const EquipmentTable = ({ data }: RoomEquipmentTableProps) => {
                 {item.equipment.equipmentName}
               </td>
               <td className="py-3 px-6 text-left">
+                {item.room.roomId}
+              </td>
+              <td className="py-3 px-6 text-left">
                 {item.room.roomName}
+              </td>
+              <td className="py-3 px-6 text-left">
+                {item.equipment.brandName}
+              </td>
+              <td className="py-3 px-6 text-left">
+                {item.equipment.description}
               </td>
               <td className="py-3 px-6 text-left">
                 {item.quantity}
@@ -59,10 +73,10 @@ const EquipmentTable = ({ data }: RoomEquipmentTableProps) => {
                   <img
                     src={`${API_BASE_URL}/${item.equipment.imageUrl}`}
                     alt={item.equipment.equipmentName}
-                    className="w-32 h-32 object-cover rounded" 
+                    className="w-32 h-32 object-cover rounded"
                   />
                 ) : (
-                  <span>No Image</span>
+                  <span>Không có ảnh</span>
                 )}
               </td>
             </tr>

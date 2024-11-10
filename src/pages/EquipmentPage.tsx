@@ -16,6 +16,8 @@ interface Room {
 interface Equipment {
   equipmentId: string;
   equipmentName: string;
+  brandName: string;
+  description: string;
   imageUrl: string | null;
 }
 

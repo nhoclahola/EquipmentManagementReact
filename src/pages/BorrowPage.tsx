@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { TextField, Button, MenuItem, CircularProgress, Paper } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { TextField, Button, MenuItem, CircularProgress, Paper, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 
@@ -12,9 +12,9 @@ interface BorrowFormData {
 
 interface UserBorrowStats {
   userId: number;
-  borrowCount: number;
-  overdueCount: number;
-  lastBorrowDate: string;
+  totalBorrowRequest: number;
+  overdueBorrowRequest: number;
+  recentBorrow: string;
 }
 
 const BorrowPage = () => {
@@ -26,12 +26,22 @@ const BorrowPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [userStats, setUserStats] = useState<UserBorrowStats>({
-    userId: 1,
-    borrowCount: 15,
-    overdueCount: 2,
-    lastBorrowDate: "2024-09-15",
-  });
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+
+  const [userStats, setUserStats] = useState<UserBorrowStats>();
+
+  useEffect(() => {
+    fetchUserStats();
+  }, [])
+
+  const fetchUserStats = () => {
+    axios.get(`${API_BASE_URL}/user/borrow-request/me`, {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("jwt")}` },
+    }).then((response) => {
+      setUserStats(response.data);
+    })
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -46,16 +56,20 @@ const BorrowPage = () => {
     setLoading(true);
     setError(null);
 
-    try {
-      await axios.post(`${API_BASE_URL}/borrow`, formData, {
-        headers: { "Authorization": `Bearer ${localStorage.getItem("jwt")}` },
-      });
-      alert("Phiếu mượn thiết bị đã được tạo thành công!");
-    } catch (error: any) {
-      setError("Đã có lỗi xảy ra, vui lòng thử lại!");
-    } finally {
+    axios.post(`${API_BASE_URL}/user/borrow-request`, formData, {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("jwt")}` },
+    }).then((response) => {
+      setSuccessDialogOpen(true);
+      setUserStats((prevStats) =>
+        prevStats ? { ...prevStats, totalBorrowRequest: prevStats.totalBorrowRequest + 1 } : prevStats
+      );
+    }).catch((error) => {
+      setError(error?.response?.data);
+      setErrorDialogOpen(true);
       setLoading(false);
-    }
+    }).finally(() => {
+      setLoading(false);
+    })
   };
 
   return (
@@ -73,6 +87,7 @@ const BorrowPage = () => {
           type="number"
           value={formData.roomId}
           onChange={handleChange}
+          inputProps={{ min: 1 }}
           fullWidth
           required
         />
@@ -83,6 +98,7 @@ const BorrowPage = () => {
           type="number"
           value={formData.equipmentId}
           onChange={handleChange}
+          inputProps={{ min: 1 }}
           fullWidth
           required
         />
@@ -105,6 +121,9 @@ const BorrowPage = () => {
           value={formData.returnDate}
           onChange={handleChange}
           InputLabelProps={{ shrink: true }}
+          inputProps={{
+            min: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split("T")[0]
+          }}
           fullWidth
           required
         />
@@ -131,19 +150,19 @@ const BorrowPage = () => {
         <div className="space-y-4">
           <div className="flex justify-between">
             <span className="font-medium">ID Người Dùng:</span>
-            <span>{userStats.userId}</span>
+            <span>{userStats?.userId}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-medium">Tổng Số Phiếu Mượn:</span>
-            <span>{userStats.borrowCount}</span>
+            <span>{userStats?.totalBorrowRequest}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-medium">Số Phiếu Mượn Quá Hạn:</span>
-            <span>{userStats.overdueCount}</span>
+            <span>{userStats?.overdueBorrowRequest}</span>
           </div>
           <div className="flex justify-between">
-            <span className="font-medium">Lần Mượn Gần Nhất:</span>
-            <span>{userStats.lastBorrowDate}</span>
+            <span className="font-medium">Lần Mượn Thành công Gần Nhất:</span>
+            <span>{userStats?.recentBorrow ? userStats?.recentBorrow.split("-").reverse().join("/") : "Không có"}</span>
           </div>
         </div>
 
@@ -157,6 +176,28 @@ const BorrowPage = () => {
           </Button>
         </div>
       </Paper>
+
+      {/* Modal Success */}
+      <Dialog open={successDialogOpen} onClose={() => setSuccessDialogOpen(false)}>
+        <DialogTitle>Thành Công</DialogTitle>
+        <DialogContent>Phiếu mượn thiết bị đã được tạo thành công!</DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSuccessDialogOpen(false)} color="primary">
+            Đóng
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Modal Error */}
+      <Dialog open={errorDialogOpen} onClose={() => setErrorDialogOpen(false)}>
+        <DialogTitle>Lỗi</DialogTitle>
+        <DialogContent>{error}</DialogContent>
+        <DialogActions>
+          <Button onClick={() => setErrorDialogOpen(false)} color="primary">
+            Đóng
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

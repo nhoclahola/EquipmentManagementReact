@@ -29,7 +29,8 @@ const NavigationBar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <span className="text-xl font-semibold">Trang chủ</span>
+            {/* <span className="text-xl font-semibold">.</span> */}
+            <img src="logo_hcmute.png" alt="HCMUTE Logo" className="h-10 w-8" />
           </div>
           
           {/* Desktop Menu */}
