@@ -1,8 +1,17 @@
+interface User {
+    userId: number;
+    fullName: string;
+    gender: boolean; // true is male, false is female
+    phoneNumber: string;
+    role: string;
+    username: string;
+}
+
 interface AuthState {
   jwt: string | null;
   loading: boolean;
   error: any | null;
-  user: string | null;
+  user: User | null;
 }
 
 const initialState: AuthState = {

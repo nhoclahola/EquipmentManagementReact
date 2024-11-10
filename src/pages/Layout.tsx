@@ -7,6 +7,7 @@ import RoomPage from "./RoomPage"
 import BorrowRoomPage from "./BorrowRoomPage"
 import Login from "./Login"
 import Authentication from "./Authentication"
+import UserProfile from "./UserProfile"
 
 const Layout = () => {
   return (
@@ -19,6 +20,7 @@ const Layout = () => {
         <Route path="equipments" element={<EquipmentPage />}></Route>
         <Route path="rooms" element={<RoomPage />}></Route>
         <Route path="login" element={<Authentication />}></Route>
+        <Route path="profile" element={<UserProfile />}></Route>
         <Route path="/" element={<Navigate to="equipments" replace />} /> {/* Route mặc định */}
       </Routes>
     </div>
