@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TextField, Button, MenuItem, CircularProgress, Paper, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
+import { useNavigate } from "react-router-dom";
 
 interface BorrowFormData {
   roomId: number;
@@ -16,6 +17,7 @@ interface UserBorrowStats {
 }
 
 const BorrowRoomPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<BorrowFormData>({
     roomId: 0,
     returnDate: "",
@@ -144,7 +146,7 @@ const BorrowRoomPage = () => {
           <Button
             variant="contained"
             color="secondary"
-            onClick={() => alert("Chức năng này hiện chưa được hỗ trợ")}
+            onClick={() => navigate("/profile")}
           >
             Xem Chi Tiết
           </Button>

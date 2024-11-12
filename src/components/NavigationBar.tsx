@@ -9,12 +9,14 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 
 const NavigationBar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location);
   const auth = useSelector((store: RootState) => store.auth)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -49,10 +51,10 @@ const NavigationBar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-4">
-            <button onClick={() => navigate("/borrow")} className="text-white hover:bg-blue-700 px-3 py-2 rounded-md">Mượn thiết bị</button>
-            <button onClick={() => navigate("/borrow-room")} className="text-white hover:bg-blue-700 px-3 py-2 rounded-md">Mượn phòng</button>
-            <button onClick={() => navigate("/equipments")} className="text-white hover:bg-blue-700 px-3 py-2 rounded-md">Thiết bị</button>
-            <button onClick={() => navigate("/rooms")} className="text-white hover:bg-blue-700 px-3 py-2 rounded-md">Phòng</button>
+            <button onClick={() => navigate("/borrow")} className={`text-white hover:bg-blue-700 ${location.pathname === "/borrow" && "bg-blue-700"} px-3 py-2 rounded-md`}>Mượn thiết bị</button>
+            <button onClick={() => navigate("/borrow-room")} className={`text-white hover:bg-blue-700 ${location.pathname === "/borrow-room" && "bg-blue-700"} px-3 py-2 rounded-md`}>Mượn phòng</button>
+            <button onClick={() => navigate("/equipments")} className={`text-white hover:bg-blue-700 ${location.pathname === "/equipments" && "bg-blue-700"} px-3 py-2 rounded-md`}>Thiết bị</button>
+            <button onClick={() => navigate("/rooms")} className={`text-white hover:bg-blue-700 ${location.pathname === "/rooms" && "bg-blue-700"} px-3 py-2 rounded-md`}>Phòng</button>
           </div>
 
           {/* Mobile Menu Icon */}
