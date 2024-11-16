@@ -28,14 +28,14 @@ RUN apk add --update nodejs npm
 # Truyền các file từ image node:22 vào
 COPY --from=development /app/ /app/
 
+# Copy file cấu hình nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Xoá sạch thư mục trước khi truyền gói build vào
 RUN rm -rf /usr/share/nginx/html/*
 
 # Trong thư mục app chứa project và file build chạy lệnh npx react-inject-env set và copy folder builder vào nginx để chạy
-# Vì sau khi build mà chạy npx react-inject-env set thì nó sẽ tạo env.js ở /build thay vì /app/build nên phải copy từ đấy vô nginx
 ENTRYPOINT npx react-inject-env set \
 && cp -R /app/build/* /usr/share/nginx/html \
 && cp -R /build/* /usr/share/nginx/html \
 && 'nginx' '-g' 'daemon off;'
-
-# Lưu ý chạy thêm lệnh 'nginx' '-g' 'daemon off;' để tránh nginx thoát ra sau khi chạy lệnh
