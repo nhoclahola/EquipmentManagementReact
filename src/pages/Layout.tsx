@@ -22,6 +22,7 @@ const Layout = () => {
         <Route path="login" element={<Authentication />}></Route>
         <Route path="profile" element={<UserProfile />}></Route>
         <Route path="/" element={<Navigate to="equipments" replace />} /> {/* Route mặc định */}
+        <Route path="/*" element={<Navigate to="equipments" replace />} />
       </Routes>
     </div>
   )
