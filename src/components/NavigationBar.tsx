@@ -12,6 +12,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { Tooltip } from "@mui/material";
 
 const NavigationBar = () => {
   const navigate = useNavigate();
@@ -46,7 +47,9 @@ const NavigationBar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             {/* <span className="text-xl font-semibold">.</span> */}
-            <img src="logo_hcmute.png" alt="HCMUTE Logo" className="h-10 w-8" />
+            <button title="Trang chủ" onClick={() => navigate("/home")}>
+                <img src="logo_hcmute.png" alt="HCMUTE Logo" className="h-10 w-8" />
+            </button>
           </div>
 
           {/* Desktop Menu */}
